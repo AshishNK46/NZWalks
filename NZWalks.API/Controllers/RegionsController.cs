@@ -24,9 +24,9 @@ namespace NZWalks.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? IsSortedByAssending, int pageNumber = 1, int pageSize = 1000)
         {
-            var regionsDomain = await _regionRepository.GetAllAsync();
+            var regionsDomain = await _regionRepository.GetAllAsync(filterOn, filterQuery, sortBy, IsSortedByAssending, pageNumber, pageSize);
             return Ok(_mapper.Map<List<RegionsDTO>>(regionsDomain));
         }
 
@@ -53,7 +53,7 @@ namespace NZWalks.API.Controllers
         [HttpPut]
         [Route("{id:guid}")]
         [ValidateModel]
-        public async Task<IActionResult> Update([FromRoute] Guid id, UpdateRegionRequestDTO updateRegionRequestDTO)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDTO updateRegionRequestDTO)
         {
             var domainRegion = await _regionRepository.UpdateAsync(id, _mapper.Map<Region>(updateRegionRequestDTO));
             if (domainRegion == null)
