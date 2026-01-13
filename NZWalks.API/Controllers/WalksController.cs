@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.CustomActionFilters;
@@ -10,6 +11,7 @@ namespace NZWalks.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Writer")]
     public class WalksController : ControllerBase
     {
         private readonly IWalksRepository walksRepository;
@@ -60,7 +62,7 @@ namespace NZWalks.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
-        
+
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var domainWalk = await walksRepository.DeleteAsync(id);
